@@ -1,6 +1,8 @@
 #import <objc/runtime.h>
 #import <libactivator/libactivator.h>
 
+BOOL mybool = NO;
+
 @interface UIStatusBarWindow : UIWindow
 -(void)tapping;
 @end
@@ -12,6 +14,7 @@
 
 @interface AudioBalancer : NSObject<LAListener>
 @end
+
 
 %hook UIStatusBarWindow
 
@@ -35,12 +38,19 @@
 @implementation AudioBalancer
 
     -(void)performAction {
-    [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:1.0];
+     if(!mybool)
+     {
+       [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:1.0];
+     }
+     else
+     {
+      [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:-1.0];
+     }
+     mybool = !mybool;
     }
 
   -(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
-
-        [self performSelector:@selector(performAction)];
+    [self performSelector:@selector(performAction)];
   }
 
   +(void)load {
@@ -53,7 +63,7 @@
       return @"AudioBalancer Activator";
   }
   - (NSString *)activator:(LAActivator *)activator requiresLocalizedDescriptionForListenerName:(NSString *)listenerName {
-      return @"Sets audiobalancer to Right 100";
+      return @"Sets audiobalancer to Right 100\uFF05";
   }
   - (NSArray *)activator:(LAActivator *)activator requiresCompatibleEventModesForListenerWithName:(NSString *)listenerName {
       return [NSArray arrayWithObjects:@"springboard", @"lockscreen", @"application", nil];
