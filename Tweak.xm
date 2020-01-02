@@ -3,9 +3,9 @@
 
 BOOL mybool = NO;
 
-@interface UIStatusBarWindow : UIWindow
--(void)tapping;
-@end
+// @interface UIStatusBarWindow : UIWindow
+// -(void)tappsing;
+// @end
 
 @interface AXSettings  : NSObject
 +(id)sharedInstance;
@@ -16,24 +16,24 @@ BOOL mybool = NO;
 @end
 
 
-%hook UIStatusBarWindow
+// %hook UIStatusBarWindow
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = %orig;
+// - (instancetype)initWithFrame:(CGRect)frame {
+//     self = %orig;
 
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapping)];
-    tapRecognizer.numberOfTapsRequired = 2;
-    tapRecognizer.cancelsTouchesInView = NO;
-    [self addGestureRecognizer:tapRecognizer];  
+//     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapping)];
+//     tapRecognizer.numberOfTapsRequired = 2;
+//     tapRecognizer.cancelsTouchesInView = NO;
+//     [self addGestureRecognizer:tapRecognizer];  
 
-    return self;
-}
+//     return self;
+// }
 
-%new
-  -(void)tapping {
-     [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:1.0];
-  }
-%end
+// %new
+//   -(void)tapping {
+//      [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:1.0];
+//   }
+// %end
 
 @implementation AudioBalancer
 
@@ -44,7 +44,7 @@ BOOL mybool = NO;
      }
      else
      {
-      [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:-1.0];
+      [[%c(AXSettings) sharedInstance] setAudioLeftRightBalance:0.0];
      }
      mybool = !mybool;
     }
